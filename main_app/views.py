@@ -4,10 +4,10 @@ from django.http import HttpResponse, JsonResponse
 # Create your views here.
 
 def home(request):
-    return HttpResponse('<h1>Hello /ᐠ｡‸｡ᐟ\ﾉ</h1>')
+    return render(request, 'home.html')
 
 def about(request):
-    return HttpResponse('About')
+    return render(request, 'about.html')
 
 def api(request):
     return JsonResponse({"status":200})
