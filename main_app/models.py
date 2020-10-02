@@ -16,3 +16,4 @@ class Cat(models.Model):
 # 1. Through forms in the app
 # 2. Through the Django/Python shell (python3 manage.py shell)
 # 3. Through the psql shell
+# 4. Through the admin panel at /admin
