@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Cat
-from .forms import Cat_Form
+from .forms import Cat_Form, Feeding_Form
 
 # Create your views here.
 
@@ -32,7 +32,8 @@ def cats_index(request):
 # show
 def cats_detail(request, cat_id):
     cat = Cat.objects.get(id=cat_id)
-    context = {'cat': cat}
+    feeding_form = Feeding_Form()
+    context = {'cat': cat, 'feeding_form': feeding_form}
     return render(request, 'cats/detail.html', context)
 
 # edit && update
