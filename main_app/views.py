@@ -17,7 +17,7 @@ def about(request):
 def api(request):
     return JsonResponse({"status": 200})
 
-
+# index and create
 def cats_index(request):
     if request.method == 'POST':
         cat_form = Cat_Form(request.POST)
@@ -29,8 +29,14 @@ def cats_index(request):
     context = {'cats': cats, 'cat_form': cat_form}
     return render(request, 'cats/index.html', context)
 
-
+# show
 def cats_detail(request, cat_id):
     cat = Cat.objects.get(id=cat_id)
     context = {'cat': cat}
     return render(request, 'cats/detail.html', context)
+
+
+# delete
+def cats_delete(request, cat_id):
+    Cat.objects.get(id=cat_id).delete()
+    return redirect("cats_index")
