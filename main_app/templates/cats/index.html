@@ -1,24 +1,28 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
+<div class="row">
+  <h1>Cat List</h1>
 
-<h1>Cat List</h1>
-
-{% for cat in cats %}
-  <div class="card">
-    <a href="{% url 'detail' cat.id %}">
-      <div class="card-content">
-        <span class="card-title">{{ cat.name }}</span>
-        <p>Breed: {{ cat.breed }}</p>
-        <p>Description: {{ cat.description }}</p>
-        {% if cat.age > 0 %}
+  <div class="col s9">
+    {% for cat in cats %}
+    <div class="card">
+      <a href="{% url 'detail' cat.id %}">
+        <div class="card-content">
+          <span class="card-title">{{ cat.name }}</span>
+          <p>Breed: {{ cat.breed }}</p>
+          <p>Description: {{ cat.description }}</p>
+          {% if cat.age > 0 %}
           <p>Age: {{ cat.age }}</p>
-        {% else %}
+          {% else %}
           <p>Age: Kitten</p>
-        {% endif %}
-      </div>
-    </a>
+          {% endif %}
+        </div>
+      </a>
+    </div>
+    {% endfor %}
   </div>
-{% endfor %}
+
+  <div class="col s3">form</div>
+</div>
 
 {% endblock %}

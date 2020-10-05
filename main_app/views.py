@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import Cat
+from .forms import Cat_Form
 
 # Create your views here.
 
@@ -15,7 +16,8 @@ def api(request):
 
 def cats_index(request):
     cats = Cat.objects.all()
-    context = {'cats': cats}
+    cat_form = Cat_Form()
+    context = {'cats': cats, 'cat_form':cat_form}
     return render(request, 'cats/index.html', context)
 
 def cats_detail(request, cat_id):
