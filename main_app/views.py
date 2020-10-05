@@ -35,6 +35,19 @@ def cats_detail(request, cat_id):
     context = {'cat': cat}
     return render(request, 'cats/detail.html', context)
 
+# edit && update
+def cats_edit(request, cat_id):
+  cat = Cat.objects.get(id=cat_id)
+  if request.method == 'POST':
+    cat_form = Cat_Form(request.POST, instance=cat)
+    if cat_form.is_valid():
+      cat_form.save()
+      return redirect('detail', cat_id=cat_id)
+  else:  
+    # in form(instance=The object that we pull back from db)
+    cat_form = Cat_Form(instance=cat)
+  context = {'cat': cat, 'cat_form': cat_form}
+  return render(request, 'cats/edit.html', context)
 
 # delete
 def cats_delete(request, cat_id):

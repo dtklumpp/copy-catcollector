@@ -16,6 +16,7 @@
   </div>
   <!-- card actions -->
     <div class="card-action">
+      <a href="{% url 'cats_edit' cat.id %}" class="btn blue">Edit</a>
       <a class="btn red" href="{% url 'cats_delete' cat.id %}">Delete</a>
     </div>
 </div>
