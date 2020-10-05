@@ -18,7 +18,7 @@ class Cat(models.Model):
 
 
 class Feeding(models.Model):
-    date = models.DateField()
+    date = models.DateField('feeding date')
     meal = models.CharField(
         max_length=1,
         choices=MEALS,
@@ -29,8 +29,9 @@ class Feeding(models.Model):
     def __str__(self):
         return f"{self.get_meal_display()} on {self.date}"
 
-# Ways to create data:
-# 1. Through forms in the app
+
+# Ways to create/query/edit/delete data:
+# 1. Through the app (forms, links, etc)
 # 2. Through the Django/Python shell (python3 manage.py shell)
 # 3. Through the psql shell
 # 4. Through the admin panel at /admin
