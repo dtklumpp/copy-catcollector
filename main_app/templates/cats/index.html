@@ -22,7 +22,12 @@
     {% endfor %}
   </div>
 
-  <div class="col s3">form</div>
+  <div class="col s3">
+    <form action="{% url 'cats_index' %}" method="POST">
+      {% csrf_token %} {{ cat_form.as_p }}
+      <input type="submit" class="btn" value="Add cat" />
+    </form>
+  </div>
 </div>
 
 {% endblock %}
