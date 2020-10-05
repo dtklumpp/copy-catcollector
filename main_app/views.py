@@ -54,3 +54,11 @@ def cats_edit(request, cat_id):
 def cats_delete(request, cat_id):
     Cat.objects.get(id=cat_id).delete()
     return redirect("cats_index")
+
+def add_feeding(request, cat_id):
+  feeding_form = Feeding_Form(request.POST)
+  if feeding_form.is_valid():
+    new_feeding = feeding_form.save(commit=False)
+    new_feeding.cat_id = cat_id
+    new_feeding.save()
+  return redirect('detail', cat_id=cat_id)
