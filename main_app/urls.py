@@ -11,3 +11,4 @@ urlpatterns = [
     path('cats/<int:cat_id>/edit/', views.cats_edit, name='cats_edit'),
     path('cats/<int:cat_id>/add_feeding/', views.add_feeding, name='add_feeding'),
 ]
+
