@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Cat, Toy
+from .models import Cat, Toy, Costume
 from .forms import Cat_Form, Feeding_Form
 
 # Create your views here.
@@ -82,3 +82,11 @@ def assoc_toy(request, cat_id, toy_id):
 def deassoc_toy(request, cat_id, toy_id):
     Cat.objects.get(id=cat_id).toys.remove(toy_id)
     return redirect('detail', cat_id=cat_id)
+
+
+# --- Costumes Views ---
+
+def costumes_index(request):
+    costumes = Costume.objects.all()
+    context = {"costumes":costumes}
+    return render(request, 'costumes/index.html', context)
