@@ -27,6 +27,11 @@ class Cat(models.Model):
     def __str__(self):
         return self.name
 
+# this is an example of a join table that django creates for us
+# class Cat_Toys(models.Model):
+#     cat_id = models.ForeignKey(Cat, on_delete=models.CASCADE)
+#     toy_id = models.ForeignKey(Toy, on_delete=models.CASCADE)
+
 
 class Feeding(models.Model):
     date = models.DateField('feeding date')
