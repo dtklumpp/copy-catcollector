@@ -10,4 +10,5 @@ class Cat_Form(ModelForm):
 class Feeding_Form(ModelForm):
     class Meta:
         model = Feeding
-        fields = ['date', 'meal']
+        fields = ['date', 'meal', 'cat']
+        

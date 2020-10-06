@@ -56,9 +56,34 @@ def cats_delete(request, cat_id):
     return redirect("cats_index")
 
 def add_feeding(request, cat_id):
-  feeding_form = Feeding_Form(request.POST)
+  import copy
+  full_request = copy.copy(request.POST)
+  full_request['cat'] = cat_id
+  feeding_form = Feeding_Form(full_request)
   if feeding_form.is_valid():
-    new_feeding = feeding_form.save(commit=False)
-    new_feeding.cat_id = cat_id
-    new_feeding.save()
+    feeding_form.save()
   return redirect('detail', cat_id=cat_id)
+
+  # print('NOW PRINTING request.post')
+  # print(request.POST)
+  # full_request = {}
+  # full_request['date'] = request.POST['date']
+  # full_request['meal'] = request.POST['meal']
+
+  # full_request.cat_id = cat_id
+  # print('NOW PRINTING full_request')
+  # print(full_request)
+
+  # print('NOW PRINTING feeding form')
+  # print(feeding_form)
+
+    # new_feeding = feeding_form.save(commit=False)
+    # print('NOW PRINTING new feeding')
+    # print(new_feeding)
+
+    # new_feeding.cat_id = cat_id
+    # new_feeding.save()
+
+    # feeding_form.save(commit=False)
+    # feeding_form.cat_id = cat_id
+
