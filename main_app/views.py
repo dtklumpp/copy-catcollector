@@ -68,3 +68,17 @@ def add_feeding(request, cat_id):
     new_feeding.cat_id = cat_id
     new_feeding.save()
   return redirect('detail', cat_id=cat_id)
+
+# --- Toy Views ---
+
+def assoc_toy(request, cat_id, toy_id):
+    Cat.objects.get(id=cat_id).toys.add(toy_id)
+    # Cat.objects.get(id=cat_id) return Cat(1) Eldritch
+    # Cat.toys returns the join table 
+    # table.add -> creates an row in the join table the id provided
+    # cat 1 | toy 3 
+    return redirect('detail', cat_id=cat_id)
+
+def deassoc_toy(request, cat_id, toy_id):
+    Cat.objects.get(id=cat_id).toys.remove(toy_id)
+    return redirect('detail', cat_id=cat_id)
