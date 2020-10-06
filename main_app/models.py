@@ -7,14 +7,30 @@ MEALS = (
 )
 
 # Create your models here.
+
+class Toy(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
 class Cat(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     age = models.IntegerField()
+    # more black magic from django
+    toys = models.ManyToManyField(Toy) # creates a join table and then you will be able to acceess the join table 
 
     def __str__(self):
         return self.name
+
+# this is an example of a join table that django creates for us
+# class Cat_Toys(models.Model):
+#     cat_id = models.ForeignKey(Cat, on_delete=models.CASCADE)
+#     toy_id = models.ForeignKey(Toy, on_delete=models.CASCADE)
 
 
 class Feeding(models.Model):
