@@ -72,7 +72,29 @@
     </div>
     <!-- Toys available to cat -->
     <div class="col s6" >
-    
+        <h3>Available toys</h3>
+        
+        {% if available_toys.count %}
+            {%for toy in available_toys %}
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">
+                        A <span style="color: {{ toy.color }}">{{ toy.color }}</span> {{ toy.name }}
+                        </span>
+                    </div>
+                    <div class="card-action">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn">Add</button>
+                        </form>
+                    </div>
+
+                </div>
+            {% endfor %}
+        {% else %}
+            has all toys
+        {% endif %}
+
     </div>
 </div>
 
