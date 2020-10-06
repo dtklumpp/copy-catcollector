@@ -21,6 +21,8 @@ class Cat(models.Model):
     breed = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     age = models.IntegerField()
+    # more black magic from django
+    toys = models.ManyToManyField(Toy) # creates a join table and then you will be able to acceess the join table 
 
     def __str__(self):
         return self.name
