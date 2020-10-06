@@ -40,14 +40,22 @@ class Feeding(models.Model):
         choices=MEALS,
         default=MEALS[0][0]
     )
-    cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
+    cat = models.ForeignKey(Cat, on_delete=models.CASCADE) # cat.feeding_set.all
 
     def __str__(self):
-        return f"{self.get_meal_display()} on {self.date}"
+        return f"{self.get_meal_display()} on {self.date} feed to {self.cat.name}"
     
     class Meta:
         ordering = ['-date']
 
+
+class Costume(models.Model):
+    name = models.CharField(max_length=50)
+    image = models.CharField(max_length=250)
+    cat = models.ForeignKey(Cat, on_delete=models.CASCADE, related_name="costumes") # cat.costumes.all
+
+    def __str__(self):
+        return f"{self.name} - {self.cat.name}"
 
 # Ways to create/query/edit/delete data:
 # 1. Through the app (forms, links, etc)
