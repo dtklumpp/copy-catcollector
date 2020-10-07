@@ -53,6 +53,16 @@ def cats_detail(request, cat_id):
 @login_required
 def cats_edit(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
+  # The following line is untested, but the idea is
+  # that we only want cat owners to be able to
+  # edit cats (or delete in the cats_delete view)
+  # In order to do this, you can include logic here
+  # that compares the cat's user to the logged-in
+  # user. Everything below it would then need to become
+  # part of that if-check and then an additional
+  # response would need to be set up to let the user they
+  # aren't allowed to perform that action.
+  # if cat.user == request.user:
   if request.method == 'POST':
     cat_form = Cat_Form(request.POST, instance=cat)
     if cat_form.is_valid():
