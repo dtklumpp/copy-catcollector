@@ -24,7 +24,11 @@ def cats_index(request):
     if request.method == 'POST':
         cat_form = Cat_Form(request.POST)
         if cat_form.is_valid():
-            cat_form.save()
+            # save(commit=False) will just make a copy/instance of the model
+            new_cat = cat_form.save(commit=False)
+            new_cat.user = request.user
+            # save() to the db
+            new_cat.save()
             return redirect('cats_index')
     cats = Cat.objects.all()
     cat_form = Cat_Form()
