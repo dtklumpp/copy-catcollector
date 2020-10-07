@@ -4,6 +4,7 @@ from .models import Cat, Toy
 from .forms import Cat_Form, Feeding_Form
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -22,6 +23,7 @@ def api(request):
 # --- Cat Views ---
 
 # index and create
+@login_required
 def cats_index(request):
     if request.method == 'POST':
         cat_form = Cat_Form(request.POST)
@@ -32,12 +34,13 @@ def cats_index(request):
             # save() to the db
             new_cat.save()
             return redirect('cats_index')
-    cats = Cat.objects.all()
+    cats = Cat.objects.filter(user=request.user)
     cat_form = Cat_Form()
     context = {'cats': cats, 'cat_form': cat_form}
     return render(request, 'cats/index.html', context)
 
 # show
+@login_required
 def cats_detail(request, cat_id):
     cat = Cat.objects.get(id=cat_id)
     # [3,1] is what is returned cat.toys.all().values_list('id')
@@ -47,6 +50,7 @@ def cats_detail(request, cat_id):
     return render(request, 'cats/detail.html', context)
 
 # edit && update
+@login_required
 def cats_edit(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
   if request.method == 'POST':
@@ -61,12 +65,14 @@ def cats_edit(request, cat_id):
   return render(request, 'cats/edit.html', context)
 
 # delete
+@login_required
 def cats_delete(request, cat_id):
     Cat.objects.get(id=cat_id).delete()
     return redirect("cats_index")
 
 # --- Feeding Views ---
 
+@login_required
 def add_feeding(request, cat_id):
   feeding_form = Feeding_Form(request.POST)
   if feeding_form.is_valid():
@@ -77,6 +83,7 @@ def add_feeding(request, cat_id):
 
 # --- Toy Views ---
 
+@login_required
 def assoc_toy(request, cat_id, toy_id):
     Cat.objects.get(id=cat_id).toys.add(toy_id)
     # Cat.objects.get(id=cat_id) return Cat(1) Eldritch
@@ -85,6 +92,7 @@ def assoc_toy(request, cat_id, toy_id):
     # cat 1 | toy 3 
     return redirect('detail', cat_id=cat_id)
 
+@login_required
 def deassoc_toy(request, cat_id, toy_id):
     Cat.objects.get(id=cat_id).toys.remove(toy_id)
     return redirect('detail', cat_id=cat_id)
@@ -92,15 +100,15 @@ def deassoc_toy(request, cat_id, toy_id):
 # --- Signup View ---
 
 def signup(request):
-  error_message = ''
-  if request.method == 'POST':
-    form = UserCreationForm(request.POST)
-    if form.is_valid():
-      user = form.save()
-      login(request, user)
-      return redirect('cats_index')
-    else:
-      error_message = 'Invalid sign up - try again'
-  form = UserCreationForm()
-  context = {'form': form, 'error_message': error_message}
-  return render(request, 'registration/signup.html', context)
+    error_message = ''
+    if request.method == 'POST':
+      form = UserCreationForm(request.POST)
+      if form.is_valid():
+        user = form.save()
+        login(request, user)
+        return redirect('cats_index')
+      else:
+        error_message = 'Invalid sign up - try again'
+    form = UserCreationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'registration/signup.html', context)
