@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Cat, Toy
 from .forms import Cat_Form, Feeding_Form
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 
@@ -86,3 +88,19 @@ def assoc_toy(request, cat_id, toy_id):
 def deassoc_toy(request, cat_id, toy_id):
     Cat.objects.get(id=cat_id).toys.remove(toy_id)
     return redirect('detail', cat_id=cat_id)
+
+# --- Signup View ---
+
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      user = form.save()
+      login(request, user)
+      return redirect('cats_index')
+    else:
+      error_message = 'Invalid sign up - try again'
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'registration/signup.html', context)
