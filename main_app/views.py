@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Cat, Toy
 from .forms import Cat_Form, Feeding_Form
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -20,18 +23,24 @@ def api(request):
 # --- Cat Views ---
 
 # index and create
+@login_required
 def cats_index(request):
     if request.method == 'POST':
         cat_form = Cat_Form(request.POST)
         if cat_form.is_valid():
-            cat_form.save()
+            # save(commit=False) will just make a copy/instance of the model
+            new_cat = cat_form.save(commit=False)
+            new_cat.user = request.user
+            # save() to the db
+            new_cat.save()
             return redirect('cats_index')
-    cats = Cat.objects.all()
+    cats = Cat.objects.filter(user=request.user)
     cat_form = Cat_Form()
     context = {'cats': cats, 'cat_form': cat_form}
     return render(request, 'cats/index.html', context)
 
 # show
+@login_required
 def cats_detail(request, cat_id):
     cat = Cat.objects.get(id=cat_id)
     # [3,1] is what is returned cat.toys.all().values_list('id')
@@ -41,8 +50,19 @@ def cats_detail(request, cat_id):
     return render(request, 'cats/detail.html', context)
 
 # edit && update
+@login_required
 def cats_edit(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
+  # The following line is untested, but the idea is
+  # that we only want cat owners to be able to
+  # edit cats (or delete in the cats_delete view)
+  # In order to do this, you can include logic here
+  # that compares the cat's user to the logged-in
+  # user. Everything below it would then need to become
+  # part of that if-check and then an additional
+  # response would need to be set up to let the user they
+  # aren't allowed to perform that action.
+  # if cat.user == request.user:
   if request.method == 'POST':
     cat_form = Cat_Form(request.POST, instance=cat)
     if cat_form.is_valid():
@@ -55,12 +75,14 @@ def cats_edit(request, cat_id):
   return render(request, 'cats/edit.html', context)
 
 # delete
+@login_required
 def cats_delete(request, cat_id):
     Cat.objects.get(id=cat_id).delete()
     return redirect("cats_index")
 
 # --- Feeding Views ---
 
+@login_required
 def add_feeding(request, cat_id):
   import copy
   full_request = copy.copy(request.POST)
@@ -96,6 +118,7 @@ def add_feeding(request, cat_id):
 
 # --- Toy Views ---
 
+@login_required
 def assoc_toy(request, cat_id, toy_id):
     Cat.objects.get(id=cat_id).toys.add(toy_id)
     # Cat.objects.get(id=cat_id) return Cat(1) Eldritch
@@ -104,6 +127,23 @@ def assoc_toy(request, cat_id, toy_id):
     # cat 1 | toy 3 
     return redirect('detail', cat_id=cat_id)
 
+@login_required
 def deassoc_toy(request, cat_id, toy_id):
     Cat.objects.get(id=cat_id).toys.remove(toy_id)
     return redirect('detail', cat_id=cat_id)
+
+# --- Signup View ---
+
+def signup(request):
+    error_message = ''
+    if request.method == 'POST':
+      form = UserCreationForm(request.POST)
+      if form.is_valid():
+        user = form.save()
+        login(request, user)
+        return redirect('cats_index')
+      else:
+        error_message = 'Invalid sign up - try again'
+    form = UserCreationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'registration/signup.html', context)

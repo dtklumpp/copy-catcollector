@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 MEALS = (
     ('B', 'Breakfast'),
@@ -23,6 +24,7 @@ class Cat(models.Model):
     age = models.IntegerField()
     # more black magic from django
     toys = models.ManyToManyField(Toy) # creates a join table and then you will be able to acceess the join table 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
